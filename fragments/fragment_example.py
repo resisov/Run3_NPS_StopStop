@@ -97,10 +97,9 @@ goalLumi = 400
 minLumi = 1e-40 # Skip minimum lumi
 minEvents, maxEvents = 20, 1000
 diagStep, bandStep = 25, 50
-midDM, maxDM = 300, 700
+midDM, maxDM = 87, 100
 addDiag = [183, 167] # DeltaM for additional diagonal lines to be added
 
-# Parameters that define the grid in the bulk and diagonal
 class gridBlock:
   def __init__(self, xmin, xmax, xstep, ystep):
     self.xmin = xmin
@@ -109,10 +108,13 @@ class gridBlock:
     self.ystep = ystep
 
 scanBlocks = []
-if (batch==1): scanBlocks.append(gridBlock(600,  3001, 300, 100))
+if (batch==1):
+  scanBlocks.append(gridBlock(600,  900, 100, 100))
+  scanBlocks.append(gridBlock(900, 1500, 50, 100))
+  scanBlocks.append(gridBlock(1500, 2501, 100, 100))
 elif (batch==2): scanBlocks.append(gridBlock(0,  1001, 50, 50))
 minDM = 87
-ymin, ymed, ymax = 0, 0, 500
+ymin, ymed, ymax = 0, 0, 2500
 
 def matchParams(mass):
   if mass>99 and mass<199: return 62., 0.498
@@ -137,9 +139,6 @@ def events(mass):
   nev = max(nev/1000, minEvents)
   return math.ceil(nev) # Rounds up
 
-# -------------------------------
-#    Constructing grid
-
 cols = []
 Nevents = []
 xmin, xmax = 9999, 0
@@ -158,55 +157,12 @@ for block in scanBlocks:
       for my in range(ymin, begBand, block.ystep):
         if my > ymax: continue
         # Adding extra diagonals to the bulk
-        for dm in addDiag:
-          if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
-          dm_before = mx-block.xstep -my
-          dm_after = mx - my
-          if(dm>dm_before and dm<dm_after):
-            nev = events(my+dm)
-            col.append([my+dm,my, nev])
-            Nbulk += nev
         nev = events(mx)
         col.append([mx,my, nev])
         Nbulk += nev
-    # Adding diagonal points in inside band
-    if (mx-block.xmin)%bandStep == 0 :
-      for my in range(begBand, mx-midDM, bandStep):
-        if my > ymax: continue
-        # Adding extra diagonals to the band
-        for dm in addDiag:
-          if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
-          dm_before = mx-bandStep -my
-          dm_after = mx - my
-          if(dm>dm_before and dm<dm_after):
-            nev = events(my+dm)
-            col.append([my+dm,my, nev])
-            Ndiag += nev
-        # Adding standard diagonal points
-        nev = events(mx)
-        col.append([mx,my, nev])
-        Ndiag += nev
-    # Adding diagonal points in band closest to outer diagonal
-    for my in range(begDiag, mx-minDM+1, diagStep):
-      if my > ymax: continue
-      # Adding extra diagonals to the band
-      for dm in addDiag:
-        if(len(cols)==0 and batch==1): continue # Don't add point before the beginning
-        dm_before = mx-diagStep -my
-        dm_after = mx - my
-        if(dm>dm_before and dm<dm_after):
-          nev = events(my+dm)
-          col.append([my+dm,my, nev])
-          Ndiag += nev
-      nev = events(mx)
-      col.append([mx,my, nev])
-      Ndiag += nev
-    if(my !=  mx-minDM and mx-minDM <= ymax):
-      my = mx-minDM
-      nev = events(mx)
-      col.append([mx,my, nev])
-      Ndiag += nev
+    
     cols.append(col)
+
   Nevents.append([Nbulk, Ndiag])
 
 mpoints = []
