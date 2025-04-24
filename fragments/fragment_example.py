@@ -89,7 +89,7 @@ batch = 1
 
 # weighted average of matching efficiencies for the full scan
 # must equal the number entered in McM generator params
-mcm_eff = 0.295
+mcm_eff = 0.248
 if batch==2: mcm_eff = 0.261
 
 # Number of events: min(goalLumi*xsec, maxEvents) (always in thousands)
@@ -117,19 +117,51 @@ minDM = 87
 ymin, ymed, ymax = 0, 0, 2500
 
 def matchParams(mass):
-  if mass>99 and mass<199: return 62., 0.498
-  elif mass<299: return 62., 0.361
-  elif mass<399: return 62., 0.302
-  elif mass<499: return 64., 0.275
-  elif mass<599: return 64., 0.254
-  elif mass<1299: return 68., 0.237
-  elif mass<1801: return 70., 0.243
+  if mass < 649: return 62., 0.274
+  elif mass < 699: return 64., 0.269
+  elif mass < 749: return 64., 0.269
+  elif mass < 799: return 66., 0.259
+  elif mass < 849: return 66., 0.261
+  elif mass < 899: return 68., 0.257
+  elif mass < 949: return 68., 0.252
+  elif mass < 999: return 70., 0.250
+  elif mass < 1049: return 70., 0.248
+  elif mass < 1099: return 70., 0.248
+  elif mass < 1149: return 70., 0.249
+  elif mass < 1199: return 70., 0.242
+  elif mass < 1249: return 70., 0.239
+  elif mass < 1299: return 70., 0.242
+  elif mass < 1349: return 70., 0.241
+  elif mass < 1399: return 70., 0.237
+  elif mass < 1449: return 70., 0.239
+  elif mass < 1499: return 70., 0.241
+  elif mass < 1549: return 70., 0.235
+  elif mass < 1599: return 70., 0.239
+  elif mass < 1649: return 70., 0.239
+  elif mass < 1699: return 70., 0.237
+  elif mass < 1749: return 70., 0.241
+  elif mass < 1799: return 70., 0.237
+  elif mass < 1849: return 70., 0.237
+  elif mass < 1899: return 70., 0.240
+  elif mass < 1949: return 70., 0.241
+  elif mass < 1999: return 70., 0.244
+  elif mass < 2049: return 70., 0.246
+  elif mass < 2099: return 70., 0.249
+  elif mass < 2149: return 70., 0.246
+  elif mass < 2199: return 70., 0.246
+  elif mass < 2249: return 70., 0.251
+  elif mass < 2299: return 70., 0.249
+  elif mass < 2349: return 70., 0.257
+  elif mass < 2399: return 70., 0.257
+  elif mass < 2449: return 70., 0.261
+  elif mass < 2499: return 70., 0.264
+  elif mass < 2549: return 70., 0.266
   ### Just for testing
   else: return 70., 0.243
 
 def xsec(mass):
   if mass < 300: return 319925471928717.38*math.pow(mass, -4.10396285974583*math.exp(mass*0.0001317804474363))
-  else: return 6953884830281245*math.pow(mass, -4.7171617288678069*math.exp(mass*6.1752771466190749e-05))
+  else: return 4855957031250000*math.pow(mass, -4.71716128867804*math.exp(mass*6.175277146619076e-05))
 
 # Number of events for mass point, in thousands
 def events(mass):
